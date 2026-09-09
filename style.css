@@ -1,0 +1,249 @@
+:root {
+  --blue: #2563eb;
+  --blue-dark: #1e40af;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.site-header {
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  color: white;
+  padding: 32px 0;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.tagline {
+  margin: 6px 0 0;
+  opacity: 0.9;
+}
+
+.search-panel {
+  background: var(--card);
+  margin-top: -24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 140px;
+}
+
+.field label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+select {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+#searchBtn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#searchBtn:hover {
+  background: var(--blue-dark);
+}
+
+.calendar-panel {
+  margin-top: 28px;
+}
+
+.calendar-panel h2 {
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+
+.calendar-subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  display: block;
+  margin-top: 4px;
+}
+
+.price-calendar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-top: 10px;
+}
+
+.date-chip {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  min-width: 100px;
+  text-align: left;
+  font-family: inherit;
+}
+
+.date-chip:hover {
+  border-color: var(--blue);
+}
+
+.date-chip.active {
+  border-color: var(--blue);
+  background: #eef4ff;
+}
+
+.date-chip.cheapest {
+  border-color: #16a34a;
+}
+
+.date-chip.cheapest .date-chip-price {
+  color: #16a34a;
+}
+
+.date-chip-date {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.date-chip-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--blue-dark);
+}
+
+.date-chip-meta {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.results {
+  margin-top: 24px;
+  padding-bottom: 40px;
+}
+
+.results-header {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.flight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flight-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.airline {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.route {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.flight-price {
+  text-align: right;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  margin-bottom: 8px;
+}
+
+.select-btn {
+  background: white;
+  border: 1px solid var(--blue);
+  color: var(--blue);
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.select-btn:hover {
+  background: var(--blue);
+  color: white;
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 40px 0;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
