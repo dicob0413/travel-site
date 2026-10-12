@@ -3,37 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyFinder - 항공권 검색</title>
+<title>물놀이 가격비교</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="site-header">
     <div class="wrap">
-      <h1>✈ SkyFinder</h1>
-      <p class="tagline">가장 저렴한 항공권을 한눈에</p>
+      <h1>물놀이 가격비교</h1>
+      <p class="tagline">워터파크 이용권 가격을 날짜별로 비교해 보세요</p>
     </div>
   </header>
 
   <main class="wrap">
     <section class="search-panel">
       <div class="field">
-        <label for="origin">출발지</label>
-        <select id="origin"></select>
-      </div>
-      <div class="field">
         <label for="region">지역</label>
         <select id="region"></select>
       </div>
       <div class="field">
-        <label for="destination">도착지</label>
-        <select id="destination"></select>
+        <label for="park">워터파크</label>
+        <select id="park"></select>
+      </div>
+      <div class="field">
+        <label for="type">이용권</label>
+        <select id="type"></select>
       </div>
       <div class="field">
         <label for="sort">정렬</label>
         <select id="sort">
           <option value="price-asc" selected>가격 낮은 순</option>
           <option value="price-desc">가격 높은 순</option>
-          <option value="duration-asc">소요시간 짧은 순</option>
+          <option value="hours-desc">이용 시간 긴 순</option>
         </select>
       </div>
       <button id="searchBtn">검색</button>
@@ -46,17 +46,17 @@
 
     <section class="results">
       <div class="results-header">
-        <span id="resultCount">0개 항공권</span>
+        <span id="resultCount">이용권 0개</span>
       </div>
-      <div id="flightList" class="flight-list"></div>
+      <div id="ticketList" class="ticket-list"></div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>SkyFinder demo &middot; 샘플 데이터 기반</p>
+    <p>가격은 예시 데이터입니다. 실제 가격은 각 워터파크에서 확인하세요.</p>
   </footer>
 
-  <script src="flights.js"></script>
+  <script src="parks.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

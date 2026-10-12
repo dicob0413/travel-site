@@ -1,6 +1,6 @@
 :root {
-  --blue: #2563eb;
-  --blue-dark: #1e40af;
+  --blue: #0891b2;
+  --blue-dark: #155e75;
   --bg: #f5f7fb;
   --card: #ffffff;
   --text: #1a1a2e;
@@ -134,7 +134,7 @@ select {
 
 .date-chip.active {
   border-color: var(--blue);
-  background: #eef4ff;
+  background: #ecfeff;
 }
 
 .date-chip.cheapest {
@@ -173,13 +173,13 @@ select {
   font-size: 14px;
 }
 
-.flight-list {
+.ticket-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.flight-card {
+.ticket-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -191,12 +191,12 @@ select {
   flex-wrap: wrap;
 }
 
-.airline {
+.seller {
   font-size: 13px;
   color: var(--muted);
 }
 
-.route {
+.park-name {
   font-size: 18px;
   font-weight: 600;
   margin: 4px 0;
@@ -209,7 +209,7 @@ select {
   color: var(--muted);
 }
 
-.flight-price {
+.ticket-price {
   text-align: right;
 }
 
