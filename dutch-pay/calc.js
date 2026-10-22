@@ -14,11 +14,23 @@
     return base;
   }
 
-  function roundTotal(r) {
-    return (r.food || 0) + (r.alcohol || 0);
+  function drinkCost(d) {
+    return Math.max(0, Math.round((d.price || 0) * (d.qty || 0)));
   }
 
-  // state = { people:[{id,name,weight,drinks,fixed}], rounds:[{id,name,food,alcohol,payer,attendees,glasses:{id:잔}}], unit, treasurer }
+  function alcoholTotal(r) {
+    return (r.alcohol || 0) + (r.drinks || []).reduce((s, d) => s + drinkCost(d), 0);
+  }
+
+  function roundTotal(r) {
+    return (r.food || 0) + alcoholTotal(r);
+  }
+
+  // state = {
+  //   people:[{id,name,weight,drinks,fixed}],
+  //   rounds:[{id,name,food,alcohol,glasses:{id:잔},drinks:[{name,price,qty,glasses:{id:잔}}],payer,attendees}],
+  //   unit, treasurer, oddPayer(끝전 몰아주기 당첨자)
+  // }
   function calculate(state) {
     const people = state.people || [];
     const rounds = state.rounds || [];
@@ -37,16 +49,28 @@
       splitInt(r.food || 0, w).forEach((v, i) => (shares[att[i]] += v));
       let drinkers = att.filter((id) => byId[id].drinks !== false);
       let warning = null;
-      if (drinkers.length === 0 && (r.alcohol || 0) > 0) {
+      if (drinkers.length === 0 && alcoholTotal(r) > 0) {
         drinkers = att;
         warning = '술 마신 사람이 없어 술값을 전원이 나눴어요';
       }
-      // 잔 수를 하나라도 입력했으면 술값은 마신 잔 수대로, 아니면 비율대로
-      drinkers.forEach((id) => (glasses[id] = Math.max(0, Math.floor((r.glasses || {})[id] || 0))));
-      const byGlass = drinkers.some((id) => glasses[id] > 0);
-      const alcoholWeights = drinkers.map((id) => (byGlass ? glasses[id] : byId[id].weight || 1));
-      splitInt(r.alcohol || 0, alcoholWeights).forEach((v, i) => (shares[drinkers[i]] += v));
-      return { round: r, shares, glasses, byGlass, attendees: att, warning };
+      // 잔 수를 하나라도 입력했으면 그 술값은 마신 잔 수대로, 아니면 비율대로
+      let byGlass = false;
+      const splitDrink = (cost, counts) => {
+        const g = drinkers.map((id) => Math.max(0, Math.floor((counts || {})[id] || 0)));
+        const useGlass = g.some((n) => n > 0);
+        byGlass = byGlass || useGlass;
+        g.forEach((n, i) => (glasses[drinkers[i]] += n));
+        splitInt(cost, useGlass ? g : drinkers.map((id) => byId[id].weight || 1)).forEach((v, i) => (shares[drinkers[i]] += v));
+        return g.reduce((a, b) => a + b, 0);
+      };
+      splitDrink(r.alcohol || 0, r.glasses);
+      const drinks = (r.drinks || []).map((d) => ({
+        name: d.name,
+        qty: d.qty || 0,
+        cost: drinkCost(d),
+        glasses: splitDrink(drinkCost(d), d.glasses),
+      }));
+      return { round: r, shares, glasses, byGlass, drinks, attendees: att, warning };
     });
 
     const total = rounds.reduce((s, r) => s + roundTotal(r), 0);
@@ -69,8 +93,21 @@
       }
     }
 
-    // 3) 송금하기 편하게 단위 올림. 차액은 총무가 떠안음(총무가 덜 냄)
-    if (unit > 1 && byId[treasurer]) {
+    // 3) 송금하기 편하게 단위 맞추기
+    //  - 끝전 몰아주기 당첨자가 있으면: 모두 내림, 잘린 끝전은 당첨자가 전부 냄
+    //  - 없으면: 모두 올림, 차액은 총무가 떠안음(총무가 덜 냄)
+    let odd = null;
+    if (unit > 1 && byId[state.oddPayer]) {
+      let diff = 0;
+      ids.forEach((id) => {
+        if (id === state.oddPayer || fixedIds.includes(id) || share[id] === 0) return;
+        const down = Math.floor(share[id] / unit) * unit;
+        diff += share[id] - down;
+        share[id] = down;
+      });
+      share[state.oddPayer] += diff;
+      odd = { payer: state.oddPayer, amount: diff };
+    } else if (unit > 1 && byId[treasurer]) {
       let diff = 0;
       ids.forEach((id) => {
         if (id === treasurer || fixedIds.includes(id) || share[id] === 0) return;
@@ -107,10 +144,28 @@
         byGlass: !!pr.byGlass,
         glasses: Object.values(pr.glasses).reduce((a, b) => a + b, 0),
       })),
+      drinks: mergeDrinks(perRound),
+      odd,
       totalGlasses: perRound.reduce((g, pr) => g + Object.values(pr.glasses).reduce((a, b) => a + b, 0), 0),
       transfers,
       warnings,
     };
+  }
+
+  // 차수 상관없이 술 종류별로 합침 (예: 소주 7병, 맥주 12잔)
+  function mergeDrinks(perRound) {
+    const map = new Map();
+    perRound.forEach((pr) =>
+      (pr.drinks || []).forEach((d) => {
+        const key = (d.name || '술').trim();
+        const cur = map.get(key) || { name: key, qty: 0, cost: 0, glasses: 0 };
+        cur.qty += d.qty;
+        cur.cost += d.cost;
+        cur.glasses += d.glasses;
+        map.set(key, cur);
+      })
+    );
+    return [...map.values()].filter((d) => d.qty > 0 || d.glasses > 0);
   }
 
   // 받을 사람/보낼 사람을 큰 금액부터 짝지어 송금 횟수를 줄임

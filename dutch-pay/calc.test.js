@@ -97,4 +97,48 @@ const people = [
   assert.strictEqual(res.rounds[0].byGlass, true);
 }
 
+// 술 종류별: 소주는 소주 마신 사람끼리, 맥주는 맥주 마신 사람끼리
+{
+  const res = calculate({
+    people,
+    unit: 1,
+    treasurer: 'b',
+    rounds: [
+      {
+        id: 'r1',
+        name: '1차',
+        food: 40000,
+        alcohol: 0,
+        payer: 'b',
+        attendees: ['a', 'b', 'c', 'd'],
+        drinks: [
+          { name: '소주', price: 5000, qty: 4, glasses: { a: 10, b: 10 } },
+          { name: '맥주', price: 4500, qty: 2, glasses: { d: 2 } },
+        ],
+      },
+    ],
+  });
+  assert.strictEqual(res.total, 40000 + 20000 + 9000);
+  // 음식 40000을 1.5:1:1:1로 → c, d는 약 8889. 술 안 마신 c는 음식값만, d는 맥주값 전부 추가
+  assert.ok(Math.abs(shareOf(res, 'c') - 40000 / 4.5) < 1);
+  assert.strictEqual(shareOf(res, 'd') - shareOf(res, 'c'), 9000);
+  assert.strictEqual(res.totalGlasses, 22);
+  assert.deepStrictEqual(res.drinks.map((d) => [d.name, d.qty, d.cost, d.glasses]), [['소주', 4, 20000, 20], ['맥주', 2, 9000, 2]]);
+}
+
+// 끝전 몰아주기: 모두 1000원 단위로 내리고 당첨자가 끝전을 다 냄
+{
+  const res = calculate({
+    people: people.map((p) => ({ ...p, weight: 1, drinks: true })),
+    unit: 1000,
+    treasurer: 'b',
+    oddPayer: 'd',
+    rounds: [{ id: 'r1', name: '1차', food: 101000, alcohol: 0, payer: 'b', attendees: ['a', 'b', 'c', 'd'] }],
+  });
+  assert.strictEqual(sum(res.people.map((p) => p.share)), 101000);
+  ['a', 'b', 'c'].forEach((id) => assert.strictEqual(shareOf(res, id), 25000));
+  assert.strictEqual(shareOf(res, 'd'), 26000);
+  assert.deepStrictEqual(res.odd, { payer: 'd', amount: 750 });
+}
+
 console.log('all tests passed');

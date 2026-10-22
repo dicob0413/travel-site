@@ -543,3 +543,274 @@ button.kakao {
 .nowrap {
   white-space: nowrap;
 }
+
+/* 술 종류별 */
+.drinks-box {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.chip.preset {
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+.drink-item {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.drink-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drink-head .dname {
+  flex: 1.2;
+  min-width: 0;
+  font-weight: 700;
+  padding: 8px;
+}
+
+.drink-head .dprice {
+  flex: 1;
+  min-width: 0;
+  padding: 8px;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.qty .step-btn {
+  width: 30px;
+  height: 30px;
+  font-size: 17px;
+}
+
+.qcount {
+  min-width: 20px;
+  text-align: center;
+}
+
+.dcost {
+  margin: 6px 0 4px;
+}
+
+.glass-sub .gtotal {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.drink-kinds {
+  margin-top: 4px;
+}
+
+/* 끝전 룰렛 */
+.odd-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  background: var(--bg);
+  border: 1px dashed var(--accent);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.tag.odd {
+  background: var(--on);
+  color: var(--accent-dark);
+}
+
+.roulette-box {
+  text-align: center;
+}
+
+.roulette-name {
+  font-size: 40px;
+  font-weight: 800;
+  margin: 18px 0 22px;
+  min-height: 52px;
+}
+
+.roulette-name.win {
+  color: var(--accent-dark);
+  animation: pop 0.4s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.7); }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* 송금 체크 */
+.transfer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.progress-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--tag-bg);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.transfers li {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.t-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.t-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.transfers li.done .t-main {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.mini,
+a.mini {
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--accent-dark);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.mini.check.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+a.mini.pay {
+  background: #3182f6;
+  border-color: #3182f6;
+  color: #fff;
+}
+
+.account {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 공유 링크로 들어온 사람 */
+.me-q {
+  font-weight: 700;
+  margin: 10px 0 6px;
+}
+
+.me-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0 12px;
+}
+
+.me-amount {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.me-amount strong {
+  font-size: 22px;
+  color: var(--accent-dark);
+}
+
+/* 이미지/룰렛 모달 */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.modal-box {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.modal-box img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+a.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--accent-dark);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
