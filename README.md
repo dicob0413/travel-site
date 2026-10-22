@@ -9,3 +9,6 @@
 
 ## 실행 방법
 `index.html`을 브라우저로 열면 바로 실행됩니다. 별도 빌드나 서버가 필요 없습니다.
+
+## 엔빵 - 술자리 N빵 계산기
+`dutch-pay/` 폴더에 있습니다. 자세한 내용은 [`dutch-pay/README.md`](dutch-pay/README.md)를 보세요.

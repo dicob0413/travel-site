@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엔빵 - 술자리 N빵 계산기</title>
+<meta name="description" content="술 안 마신 사람은 술값 빼고, 2차는 온 사람만, 선배는 조금 더. 복잡한 술자리 정산을 1분 만에 끝내고 카톡방에 바로 공유하세요.">
+<!-- 카톡/SNS 링크 미리보기. 배포 후 og:url, og:image를 실제 주소로 바꾸세요 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="엔빵 - 술자리 N빵 계산기">
+<meta property="og:description" content="술값 제외 · 차수별 정산 · 선배 가중치까지. 정산 결과를 카톡방에 공유하세요.">
+<meta property="og:image" content="og-image.png">
+<meta name="theme-color" content="#f59e0b">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>🍻 엔빵</h1>
+      <p>술 안 마신 사람 빼고, 2차는 온 사람만, 선배는 조금 더</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- 공유 링크로 들어온 사람에게 보이는 배너 -->
+    <section id="sharedBanner" class="card shared hidden">
+      <strong id="sharedTitle"></strong>
+      <p>친구가 보낸 정산 결과예요. 내 금액을 확인하고 송금하세요.</p>
+      <div class="row">
+        <button id="editShared" class="ghost">이 정산 수정하기</button>
+        <button id="newCalc">나도 계산하기</button>
+      </div>
+    </section>
+
+    <div id="editor">
+      <section class="card">
+        <h2><span class="step">1</span> 모임 정보</h2>
+        <input id="title" type="text" maxlength="30" placeholder="예) 팀 회식, 동아리 뒷풀이">
+      </section>
+
+      <section class="card">
+        <h2><span class="step">2</span> 누가 왔나요?</h2>
+        <form id="addPersonForm" class="row">
+          <input id="personName" type="text" maxlength="12" placeholder="이름 입력 후 Enter" autocomplete="off">
+          <button type="submit">추가</button>
+        </form>
+        <p class="hint">🍺 = 술 마심 (끄면 술값 제외) · 비율 = 선배는 더, 막내는 덜 · 고정 = "내가 10만원 낼게"</p>
+        <ul id="people" class="people"></ul>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">3</span> 차수별 금액</h2>
+        <div id="rounds"></div>
+        <button id="addRound" class="ghost wide">+ 다음 차 추가</button>
+      </section>
+
+      <section class="card">
+        <h2><span class="step">4</span> 정산 설정</h2>
+        <div class="grid2">
+          <label>총무 (돈 받을 사람)
+            <select id="treasurer"></select>
+          </label>
+          <label>송금 단위 (올림)
+            <select id="unit">
+              <option value="1">1원 (정확히)</option>
+              <option value="10">10원</option>
+              <option value="100" selected>100원</option>
+              <option value="1000">1,000원</option>
+            </select>
+          </label>
+        </div>
+        <label>계좌 (선택, 공유 메시지에 표시)
+          <input id="account" type="text" maxlength="40" placeholder="예) 카카오뱅크 3333-01-1234567">
+        </label>
+        <p class="hint">올림으로 생긴 차액은 총무가 덜 내는 방식으로 맞춰요.</p>
+      </section>
+    </div>
+
+    <section class="card result" id="result">
+      <h2>💸 정산 결과</h2>
+      <div id="resultBody"></div>
+      <div class="share">
+        <button id="shareBtn" class="kakao">카톡방에 공유하기</button>
+        <div class="row">
+          <button id="copyText" class="ghost">결과 텍스트 복사</button>
+          <button id="copyLink" class="ghost">링크만 복사</button>
+        </div>
+        <button id="resetBtn" class="text">처음부터 다시</button>
+      </div>
+    </section>
+
+    <!-- 광고 자리: 애드센스 승인 후 코드를 넣으세요 -->
+    <div class="ad-slot" id="adSlot"></div>
+  </main>
+
+  <footer class="foot">
+    <p>엔빵 · 입력한 정보는 서버에 저장되지 않고 링크 안에만 담겨요</p>
+  </footer>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="calc.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
