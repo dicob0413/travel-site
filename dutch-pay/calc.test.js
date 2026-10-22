@@ -79,4 +79,22 @@ const people = [
   assert.deepStrictEqual(res.transfers, [{ from: 'b', to: 'a', amount: 10000 }]);
 }
 
+// 잔 수를 입력하면 술값은 잔 수대로 (술 안 마신 사람의 잔 수는 무시)
+{
+  const res = calculate({
+    people,
+    unit: 1,
+    treasurer: 'b',
+    rounds: [
+      { id: 'r1', name: '1차', food: 0, alcohol: 60000, payer: 'b', attendees: ['a', 'b', 'c', 'd'], glasses: { a: 6, b: 3, c: 5, d: 3 } },
+    ],
+  });
+  assert.strictEqual(shareOf(res, 'a'), 30000);
+  assert.strictEqual(shareOf(res, 'b'), 15000);
+  assert.strictEqual(shareOf(res, 'c'), 0);
+  assert.strictEqual(res.totalGlasses, 12);
+  assert.strictEqual(res.people.find((p) => p.id === 'a').glasses, 6);
+  assert.strictEqual(res.rounds[0].byGlass, true);
+}
+
 console.log('all tests passed');

@@ -18,7 +18,7 @@
     return (r.food || 0) + (r.alcohol || 0);
   }
 
-  // state = { people:[{id,name,weight,drinks,fixed}], rounds:[{id,name,food,alcohol,payer,attendees}], unit, treasurer }
+  // state = { people:[{id,name,weight,drinks,fixed}], rounds:[{id,name,food,alcohol,payer,attendees,glasses:{id:잔}}], unit, treasurer }
   function calculate(state) {
     const people = state.people || [];
     const rounds = state.rounds || [];
@@ -31,7 +31,8 @@
     const perRound = rounds.map((r) => {
       const att = (r.attendees || []).filter((id) => byId[id]);
       const shares = Object.fromEntries(ids.map((id) => [id, 0]));
-      if (att.length === 0) return { round: r, shares, attendees: att, warning: roundTotal(r) > 0 ? '참석자가 없어요' : null };
+      const glasses = Object.fromEntries(ids.map((id) => [id, 0]));
+      if (att.length === 0) return { round: r, shares, glasses, attendees: att, warning: roundTotal(r) > 0 ? '참석자가 없어요' : null };
       const w = att.map((id) => byId[id].weight || 1);
       splitInt(r.food || 0, w).forEach((v, i) => (shares[att[i]] += v));
       let drinkers = att.filter((id) => byId[id].drinks !== false);
@@ -40,8 +41,12 @@
         drinkers = att;
         warning = '술 마신 사람이 없어 술값을 전원이 나눴어요';
       }
-      splitInt(r.alcohol || 0, drinkers.map((id) => byId[id].weight || 1)).forEach((v, i) => (shares[drinkers[i]] += v));
-      return { round: r, shares, attendees: att, warning };
+      // 잔 수를 하나라도 입력했으면 술값은 마신 잔 수대로, 아니면 비율대로
+      drinkers.forEach((id) => (glasses[id] = Math.max(0, Math.floor((r.glasses || {})[id] || 0))));
+      const byGlass = drinkers.some((id) => glasses[id] > 0);
+      const alcoholWeights = drinkers.map((id) => (byGlass ? glasses[id] : byId[id].weight || 1));
+      splitInt(r.alcohol || 0, alcoholWeights).forEach((v, i) => (shares[drinkers[i]] += v));
+      return { round: r, shares, glasses, byGlass, attendees: att, warning };
     });
 
     const total = rounds.reduce((s, r) => s + roundTotal(r), 0);
@@ -93,8 +98,16 @@
         share: share[p.id],
         paid: paid[p.id],
         rounds: perRound.map((pr) => pr.shares[p.id]),
+        glasses: perRound.reduce((g, pr) => g + pr.glasses[p.id], 0),
       })),
-      rounds: perRound.map((pr) => ({ name: pr.round.name, total: roundTotal(pr.round), attendees: pr.attendees.length })),
+      rounds: perRound.map((pr) => ({
+        name: pr.round.name,
+        total: roundTotal(pr.round),
+        attendees: pr.attendees.length,
+        byGlass: !!pr.byGlass,
+        glasses: Object.values(pr.glasses).reduce((a, b) => a + b, 0),
+      })),
+      totalGlasses: perRound.reduce((g, pr) => g + Object.values(pr.glasses).reduce((a, b) => a + b, 0), 0),
       transfers,
       warnings,
     };
